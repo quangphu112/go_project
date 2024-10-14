@@ -1,0 +1,132 @@
+run:
+  timeout: 5m
+  issues-exit-code: 1
+  concurrency: 0
+  allow-parallel-runners: true
+
+output:
+  formats:
+    - format: json
+      path: stderr
+    - format: colored-line-number
+    - format: code-climate
+      path: gl-code-quality-report.json
+    - format: line-number
+  print-issued-lines: true
+  show-stats: true
+linters-settings:
+  errcheck:
+    # report about not checking of errors in type assertions: `a := b.(MyStruct)`;
+    check-type-assertions: true
+
+    # report about assignment of errors to blank identifier: `num, _ := strconv.Atoi(numStr)`;
+    check-blank: true
+
+  gocognit:
+    min-complexity: 10
+
+  nestif:
+    min-complexity: 4
+
+  gocyclo:
+    min-complexity: 10
+
+  # golint:
+  #   min-confidence: 0.8
+
+  govet:
+    enable-all: true
+
+  # ifshort:
+  #   # Maximum length of variable declaration measured in number of characters, after which linter won't suggest using short syntax.
+  #   max-decl-chars: 30
+
+  lll:
+    # max line length, lines longer will be reported. Default is 120.
+    # '\t' is counted as 1 character by default, and can be changed with the tab-width option
+    line-length: 120
+
+    # tab width in spaces. Default to 1.
+    tab-width: 2
+
+  misspell:
+    locale: US
+
+  nolintlint:
+    # report any unused nolint directives
+    allow-unused: false
+
+    # don't require machine-readable nolint directives (i.e. with no leading space)
+    # allow-leading-space: true
+
+    # require an explanation for nolint directives
+    require-explanation: true
+
+    # require nolint directives to be specific about which linter is being skipped
+    require-specific: true
+
+  whitespace:
+    multi-if: false # Enforces newlines (or comments) after every multi-line if statement
+    multi-func: false # Enforces newlines (or comments) after every multi-line function signature
+
+linters:
+  disable-all: true
+  enable:
+    - bodyclose
+    - unused
+    - dogsled
+    - dupl
+    - errcheck
+    - exhaustive
+    - funlen
+    - gochecknoinits
+    - gocognit
+    - goconst
+    - gocritic
+    - gocyclo
+    - gofmt
+    # - goheader
+    - goimports
+    - revive
+    - goprintffuncname
+    - gosec
+    - gosimple
+    - govet
+    - ineffassign
+    - lll
+    - misspell
+    - nakedret
+    - nestif
+    - noctx
+    - nolintlint
+    - rowserrcheck
+    - exportloopref
+    - staticcheck
+    - unused
+    - stylecheck
+    - typecheck
+    - unconvert
+    - unparam
+    - unused
+    - whitespace
+
+issues:
+  exclude-rules:
+    # Exclude some linters from running on tests files.
+    - path: _test\.go
+      linters:
+        - gocyclo
+        - errcheck
+        - dupl
+        - gosec
+
+    - linters:
+        - lll
+      source: "^//go:generate"
+  max-issues-per-linter: 0
+  max-same-issues: 0
+  exclude-files:
+    - "_mock\\.go$"
+    - "mock_.+\\.go$"
+  exclude-dirs:
+    - test
